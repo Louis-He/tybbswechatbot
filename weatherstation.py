@@ -20,7 +20,7 @@ class station:
         return '站点信息：' + self.number + self.name
 
     def updatestationweather(self, name, station, forecast):
-        
+
         timenow = times.time()
         self.realtimeupdatetime = timenow
         print('[' + times.strftime("%Y-%m-%d %H:%M:%S", times.localtime()) + ']获取' + station + name + '天气信息')
