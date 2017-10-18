@@ -149,7 +149,7 @@ def getdaymsg():
     return timenow+'每日一句：\n'+note+'\n'+chinese
 
 def getstationfile():
-    # f = open('~/qxshz/stations.txt')  # 返回一个文件对象
+    # f = open('/root/qxahz/stations.txt')  # 返回一个文件对象
     f = open('/Users/siweihe/Desktop/stations.txt')
     tmp = ''
     line = f.readline()  # 调用文件的 readline()方法
