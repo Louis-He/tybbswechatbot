@@ -267,12 +267,10 @@ def hello(msg):
         return daily
     elif msg.content[-2:len(msg.content)] == '天气' or msg.content[-2:len(msg.content)] == '气象' \
             or msg.content[-2:len(msg.content)] == '温度' or msg.content[-2:len(msg.content)] == '气温':
-        getcnweather(msg.content[0:-2],True)
-        return ''
+        return(getcnweather(msg.content[0:-2],True))
     elif msg.content[-2:len(msg.content)] == '实况' or msg.content[-2:len(msg.content)] == '实测' \
             or msg.content[-2:len(msg.content)] == '监测':
-        getcnweather(msg.content[0:-2],False)
-        return ''
+        return (getcnweather(msg.content[0:-2],False))
     else:
         return ('欢迎关注中国气象爱好者\n1.输入相关城市进行天气查询，例如："北京天气"，"上海天气"\n'
                 '2.输入相关城市进行实况要素查询，例如："广州实况"，"乌鲁木齐实况"\n' + daily)
