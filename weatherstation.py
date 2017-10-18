@@ -1,6 +1,6 @@
 import urllib
 import json
-import time
+import time as times
 
 class station:
     def __init__(self, innumber, inname, incity, inlat, inlon):
@@ -20,10 +20,10 @@ class station:
         return '站点信息：' + self.number + self.name
 
     def updatestationweather(self, name, station, forecast):
-        global time
-        timenow = time.time()
+        
+        timenow = times.time()
         self.realtimeupdatetime = timenow
-        print('[' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ']获取' + station + name + '天气信息')
+        print('[' + times.strftime("%Y-%m-%d %H:%M:%S", times.localtime()) + ']获取' + station + name + '天气信息')
 
         # http://www.nmc.cn/f/rest/real/58367
         data = urllib.request.urlopen(
