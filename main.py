@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from weatherstation import *
 import werobot
 import time
 import urllib
@@ -6,9 +7,11 @@ import json
 import requests
 from sympy import *
 from apscheduler.schedulers.background import BackgroundScheduler
+global weatherstation
 
+weatherstation = []
 robot = werobot.WeRoBot(token='louishe999617')
-client = robot.client
+#client = robot.client
 
 def getData(org,lon,lat):
     if org == 'GFS':
@@ -145,6 +148,90 @@ def getdaymsg():
     print('[' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ']每日一句获取成功')
     return timenow+'每日一句：\n'+note+'\n'+chinese
 
+def getstationfile():
+    # f = open('~/qxshz/stations.txt')  # 返回一个文件对象
+    f = open('/Users/siweihe/Desktop/stations.txt')
+    tmp = ''
+    line = f.readline()  # 调用文件的 readline()方法
+    while line:
+        tmp = line
+        tmp = tmp.replace('\n', '')
+        while (tmp.find(' ') != -1):
+            id = tmp[0:tmp.find(' ')]
+            tmp = tmp[tmp.find(' ') + 1:len(tmp)]
+
+            name = tmp[0:tmp.find(' ')]
+            tmp = tmp[tmp.find(' ') + 1:len(tmp)]
+
+            city = tmp[0:tmp.find(' ')]
+            tmp = tmp[tmp.find(' ') + 1:len(tmp)]
+
+            lat = tmp[0:tmp.find(' ') - 1]
+            tmp = tmp[tmp.find(' ') + 1:len(tmp)]
+
+            lon = tmp[0:tmp.find(' ') - 1]
+            tmp = tmp[tmp.find(' ') + 1:len(tmp)]
+        print(id, name, city, lat, lon)
+        weatherstation.append(station(id, name, city, lat, lon))
+        line = f.readline()
+    f.close()
+
+def getcnweather(usrinput, forecast):
+    print(usrinput)
+    ts = time.time()
+    best = False
+    requeststation = []
+    stationnumbers = []
+    seq = []
+
+    for i in range(0,len(weatherstation)):
+        if weatherstation[i].name == usrinput:
+            requeststation.append(weatherstation[i].name)
+            stationnumbers.append(weatherstation[i].number)
+            seq.append(i)
+            best = True
+
+    if not best:
+        for i in weatherstation:
+            if i.name.find(usrinput) != -1:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+            elif usrinput.find(i.name) != -1:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+            elif i.city == usrinput and not best:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+            elif i.city.find(usrinput) != -1 and not best:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+            elif usrinput.find(i.city) != -1 and not best:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+
+    if best:
+        if forecast:
+            result = weatherstation[seq[0]].getweather(weatherstation[seq[0]].name, weatherstation[seq[0]].number, True, ts)
+        else:
+            result = weatherstation[seq[0]].getweather(weatherstation[seq[0]].name, weatherstation[seq[0]].number, False, ts)
+        #
+    else:
+        result = '查找到以下相关站点，请输入选择：(例如：' + requeststation[0] + '天气)\n'
+        for i in requeststation:
+            if i != requeststation[len(requeststation)-1]:
+                result += i + ','
+            else:
+                result += i
+        return result
+    return result
+
+getstationfile()
+
 '''
 def clearlog():
     #clear logs every hour
@@ -159,11 +246,6 @@ scheduler.add_job(clearlog, 'interval', seconds = 3600 * 6)#间隔6小时执行�
 scheduler.start()    #这里的调度任务是独立的一个线程
 '''
 
-def gettoken():
-    client.grant_token()
-    timenow = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    print('[' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ']access_token获取成功')
-    return timenow
 
 daily = ''
 
@@ -181,35 +263,23 @@ def hello(msg):
     f.close()
     print(ts + msg.source+' --> '+msg.content)
 
-    if msg.content == '天气' or msg.content == '气温' or msg.content == '气象':
-        try:
-            print('[' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ']准备发送天气信息')
-            return getweather()
-        except:
-            return '[ERR100:内部错误]抱歉，调取最新天气失败'
-    elif msg.content[0:2] == '叮咚':
-        try:
-            usr = str(msg.source)
-            print('检测到用户：' + usr)
-        except:
-            usr = 'unknown'
-            print('[WARNING]无法检测到用户')
-        message = msg.content[2:len(msg.content)]
-
-        try:
-            print('[' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ']自动回复开启')
-            reply = turingreply(message, usr)
-            print('[' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ']自动回复：' + reply)
-            return reply + '[auto-reply]'
-        except:
-            return '[ERR199:未知错误]抱歉，出现了未知错误'
-    elif msg.content == '每日一句':
+    if msg.content == '每日一句':
         return daily
+    elif msg.content[-2:len(msg.content)] == '天气' or msg.content[-2:len(msg.content)] == '气象' \
+            or msg.content[-2:len(msg.content)] == '温度' or msg.content[-2:len(msg.content)] == '气温':
+        getcnweather(msg.content[0:-2],True)
+        return ''
+    elif msg.content[-2:len(msg.content)] == '实况' or msg.content[-2:len(msg.content)] == '实测' \
+            or msg.content[-2:len(msg.content)] == '监测':
+        getcnweather(msg.content[0:-2],False)
+        return ''
     else:
-        return '欢迎关注小白叮咚～欢迎和我互动哦\n1、输入叮咚求导（语法例如:叮咚求导2*x^2）返回导数\n2、输入叮咚RREF（语法例如:叮咚rref1,2;3,4）返回RREF\n' \
-               '3、输入叮咚（语法例如：叮咚你好）进行机器人智能回复\n4、输入天气：查询加拿大多伦多天气[测试板块]\n'+daily
+        return ('欢迎关注中国气象爱好者\n1.输入相关城市进行天气查询，例如："北京天气"，"上海天气"\n'
+                '2.输入相关城市进行实况要素查询，例如："广州实况"，"乌鲁木齐实况"\n' + daily)
 
 # 让服务器监听在 0.0.0.0:80
 robot.config['HOST'] = '0.0.0.0'
 robot.config['PORT'] = 80
 robot.run()
+
+#print(getstationweather('漠河',50136, false))
