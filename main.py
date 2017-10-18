@@ -222,13 +222,16 @@ def getcnweather(usrinput, forecast):
             result = weatherstation[seq[0]].getweather(weatherstation[seq[0]].name, weatherstation[seq[0]].number, False, ts)
         #
     else:
-        result = '查找到以下相关站点，请输入选择：(例如：' + requeststation[0] + '天气)\n'
-        for i in requeststation:
-            if i != requeststation[len(requeststation)-1]:
-                result += i + ','
-            else:
-                result += i
-        return result
+        try:
+            result = '查找到以下相关站点，请输入选择：(例如：' + requeststation[0] + '天气)\n'
+            for i in requeststation:
+                if i != requeststation[len(requeststation)-1]:
+                    result += i + ','
+                else:
+                    result += i
+            return result
+        except:
+            return "抱歉，没有找到相关站点"
     return result
 
 getstationfile()
