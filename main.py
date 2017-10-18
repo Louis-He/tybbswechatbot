@@ -258,7 +258,7 @@ scheduler.start()  # 这里的调度任务是独立的一个线程
 @robot.handler
 def hello(msg):
     ts = '['+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(msg.time-4*60*60))+']'
-    f = open('/root/wechatbot/message.txt', 'a+')
+    f = open('/root/qxahz/message.txt', 'a+')
     f.write(ts + '\t' + msg.source + ':\t' + msg.content + '\n')
     f.close()
     print(ts + msg.source+' --> '+msg.content)
