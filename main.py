@@ -146,6 +146,7 @@ def getdaymsg():
     note = data["content"]
     chinese = data["note"]
     print('[' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ']每日一句获取成功')
+    daily = timenow+'每日一句：\n'+note+'\n'+chinese
     return timenow+'每日一句：\n'+note+'\n'+chinese
 
 def getstationfile():
@@ -252,7 +253,7 @@ daily = ''
 #gettoken()
 daily = getdaymsg() #初始化每日一句
 scheduler = BackgroundScheduler()
-scheduler.add_job(getdaymsg, 'interval', seconds=24 * 60 * 60)  # 间隔24小时执行一次
+scheduler.add_job(getdaymsg, 'interval', seconds = 24 * 60 * 60)  # 间隔24小时执行一次
 scheduler.start()  # 这里的调度任务是独立的一个线程
 
 @robot.handler
