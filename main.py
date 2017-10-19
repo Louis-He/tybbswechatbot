@@ -234,6 +234,64 @@ def getcnweather(usrinput, forecast):
             return "抱歉，没有找到相关站点"
     return result
 
+def getcnair(usrinput):
+    print(usrinput)
+    ts = time.time()
+    best = False
+    requeststation = []
+    stationnumbers = []
+    seq = []
+
+    for i in range(0, len(weatherstation)):
+        if weatherstation[i].name == usrinput:
+            requeststation.append(weatherstation[i].name)
+            stationnumbers.append(weatherstation[i].number)
+            seq.append(i)
+            best = True
+
+    if not best:
+        for i in weatherstation:
+            if i.name.find(usrinput) != -1:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+            elif usrinput.find(i.name) != -1:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+            elif i.city == usrinput and not best:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+            elif i.city.find(usrinput) != -1 and not best:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+            elif usrinput.find(i.city) != -1 and not best:
+                requeststation.append(i.name)
+                stationnumbers.append(i.number)
+                seq.append(i)
+
+    if best:
+        try:
+            result = weatherstation[seq[0]].getair(weatherstation[seq[0]].name, weatherstation[seq[0]].number, ts)
+        except:
+            result = '抱歉，该城市没有空气质量数据'
+            #
+    else:
+        try:
+            result = '查找到以下相关站点，请输入选择：(例如：' + requeststation[0] + '空气)\n'
+            for i in requeststation:
+                if i != requeststation[len(requeststation) - 1]:
+                    result += i + ','
+                else:
+                    result += i
+            return result
+        except:
+            return "抱歉，没有找到相关站点"
+    return result
+
+
 getstationfile()
 
 '''
@@ -276,6 +334,12 @@ def hello(msg):
         elif msg.content[-2:len(msg.content)] == '实况' or msg.content[-2:len(msg.content)] == '实测' \
                 or msg.content[-2:len(msg.content)] == '监测':
             return (getcnweather(msg.content[0:-2],False))
+        elif msg.content[-2:len(msg.content)] == '空气':
+            return (getcnair(msg.content[0:-2]))
+        elif msg.content[-4:len(msg.content)] == '空气质量':
+            return (getcnair(msg.content[0:-4]))
+        elif msg.content[-3:len(msg.content)] == 'aqi' or msg.content[-3:len(msg.content)] == 'AQI':
+            return (getcnair(msg.content[0:-3]))
         else:
             return ('欢迎关注中国气象爱好者\n1.输入相关城市进行天气查询，例如："北京天气"，"上海天气"\n'
                     '2.输入相关城市进行实况要素查询，例如："广州实况"，"乌鲁木齐实况"\n' + daily)

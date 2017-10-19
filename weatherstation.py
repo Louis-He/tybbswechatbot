@@ -16,6 +16,10 @@ class station:
         self.webrealupdatetime = ''
         self.webforecastupdatetime = ''
 
+        self.airupdatetime = 0
+        self.webairupdatetime = ''
+        self.air = ''
+
     def __str__(self):
         return '站点信息：' + self.number + self.name
 
@@ -182,6 +186,24 @@ class station:
         result += '以上信息于' + time + '更新，数据源自国家气象中心'
         return result
 
+    def updatestationair(self,name,station):
+        timenow = times.time()
+        self.airupdatetime = timenow
+        print('[' + times.strftime("%Y-%m-%d %H:%M:%S", times.localtime()) + ']获取' + station + name + '空气质量信息')
+
+        # http://www.nmc.cn/f/rest/real/58367
+        data = urllib.request.urlopen(
+            'http://www.nmc.cn/f/rest/aqi/' + str(station)).read()
+        record = data.decode('UTF-8')
+        data = json.loads(record)
+        forecasttime = data['forecasttime']
+        aqi = data['aqi']
+        description = data['text']
+
+        result = name + forecasttime + '实时空气质量指数：' + str(aqi) + ',' + description
+        self.webairupdatetime = forecasttime
+        self.air = result
+        return result
     #def getrealtimedata(self, time, stationnumber):
 
     # def infoupdate(self):
@@ -196,3 +218,9 @@ class station:
             return self.realtimecontent + self.forecastcontent +'实况数据于'+self.webrealupdatetime+',预报于' + self.webforecastupdatetime + '更新，数据来源自国家气象中心'
         if not forecast:
             return self.realtimecontent + '\n实况数据于'+self.webrealupdatetime+ '更新，数据来源自国家气象中心'
+
+    def getair(self,name,station,timestamp):
+        if (timestamp - self.airupdatetime > 20 * 60):
+               self.updatestationair(name,station)
+
+        return self.air + '\n空气质量数据于' + self.webairupdatetime + '更新，数据来源自国家气象中心'
