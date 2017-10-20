@@ -151,7 +151,7 @@ def getdaymsg():
 
 def getstationfile():
     # f = open('/root/qxahz/stations.txt')  # 返回一个文件对象
-    f = open('/Users/siweihe/Desktop/stations.txt')
+    f = open('stations.txt')
     tmp = ''
     line = f.readline()  # 调用文件的 readline()方法
     while line:
