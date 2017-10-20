@@ -339,6 +339,21 @@ def hello(msg):
             return (getcnair(msg.content[0:-4]))
         elif msg.content[-3:len(msg.content)] == 'aqi' or msg.content[-3:len(msg.content)] == 'AQI':
             return (getcnair(msg.content[0:-3]))
+        elif msg.content[-4:len(msg.content)] == 'test':
+            return [
+                [
+                    "title",
+                    "description",
+                    "img",
+                    "url"
+                ],
+                [
+                    "Developer Louis-He",
+                    "Developer profile",
+                    "https://avatars0.githubusercontent.com/u/28524641?s=460&v=4",
+                    "https://github.com/Louis-He"
+                ]
+            ]
         else:
             return ('欢迎关注中国气象爱好者～\n1.输入相关城市进行天气查询，例如："北京天气"，"上海天气"\n'
                     '2.输入相关城市进行实况要素查询，例如："广州实况"，"乌鲁木齐实况"\n'
