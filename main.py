@@ -339,7 +339,7 @@ def hello(msg):
             return (getcnair(msg.content[0:-4]))
         elif msg.content[-3:len(msg.content)] == 'aqi' or msg.content[-3:len(msg.content)] == 'AQI':
             return (getcnair(msg.content[0:-3]))
-        elif msg.content[-4:len(msg.content)] == 'test':
+        elif msg.content[-3:len(msg.content)] == '开发者'  or msg.content[-2:len(msg.content)] == '关于':
             '''
                 [
                     "title",
@@ -350,8 +350,8 @@ def hello(msg):
             '''
             return [
                 [
-                    "Developer Louis-He",
-                    "Developer profile",
+                    "开发者 Developer Louis-He",
+                    "开发者Github主页 Developer Github",
                     "https://avatars0.githubusercontent.com/u/28524641?s=460&v=4",
                     "https://github.com/Louis-He"
                 ]
