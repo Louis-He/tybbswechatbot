@@ -340,15 +340,15 @@ def hello(msg):
         elif msg.content[-3:len(msg.content)] == 'aqi' or msg.content[-3:len(msg.content)] == 'AQI':
             return (getcnair(msg.content[0:-3]))
         elif msg.content[-4:len(msg.content)] == 'test':
+            '''
+                [
+                    "title",
+                    "description",
+                    "img",
+                    "url"
+                ],
+            '''
             return [
-                '''
-                                [
-                                    "title",
-                                    "description",
-                                    "img",
-                                    "url"
-                                ],
-                '''
                 [
                     "Developer Louis-He",
                     "Developer profile",
