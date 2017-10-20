@@ -356,6 +356,15 @@ def hello(msg):
                     "https://github.com/Louis-He"
                 ]
             ]
+        elif msg.content[-2:len(msg.content)] == '墙纸':
+            return [
+                [
+                    "小白Iphone自制墙纸",
+                    "开发者专用墙纸@小白",
+                    "http://192.241.196.228:8080/static/iPhone8.png",
+                    "http://192.241.196.228:8080/static/iPhone8.png"
+                ]
+            ]
         else:
             return ('欢迎关注中国气象爱好者～\n1.输入相关城市进行天气查询，例如："北京天气"，"上海天气"\n'
                     '2.输入相关城市进行实况要素查询，例如："广州实况"，"乌鲁木齐实况"\n'
