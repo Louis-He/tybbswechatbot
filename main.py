@@ -5,7 +5,6 @@ import time
 import urllib
 import json
 import requests
-from sympy import *
 from apscheduler.schedulers.background import BackgroundScheduler
 global weatherstation
 
