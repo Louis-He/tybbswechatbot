@@ -341,12 +341,14 @@ def hello(msg):
             return (getcnair(msg.content[0:-3]))
         elif msg.content[-4:len(msg.content)] == 'test':
             return [
-                [
-                    "title",
-                    "description",
-                    "img",
-                    "url"
-                ],
+                '''
+                                [
+                                    "title",
+                                    "description",
+                                    "img",
+                                    "url"
+                                ],
+                '''
                 [
                     "Developer Louis-He",
                     "Developer profile",
