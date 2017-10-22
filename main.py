@@ -12,6 +12,7 @@ weatherstation = []
 robot = werobot.WeRoBot(token='louishe999617')
 #client = robot.client
 
+#DEVELOPING...
 def getData(org,lon,lat):
     if org == 'GFS':
         data = urllib.request.urlopen('https://node.windy.com/forecast/v2.1/gfs/' + str(lat) +'/' + str(lon) + '?source=detail').read()
@@ -38,6 +39,7 @@ def getData(org,lon,lat):
     print(data)
     return data
 
+#DEVELOPING...
 def analyze(source, JSON):
     n = 0
     T = []
@@ -81,10 +83,6 @@ def analyze(source, JSON):
             icon = 'Snow'
         elif icon == 10:
             icon = 'Heavy Snow'
-
-
-
-
         IC.append(icon)
         DATE.append(i)
         seq.append(n)
@@ -119,21 +117,13 @@ def analyze(source, JSON):
 
     return result
 
+#DEVELOPING...
 def getweather():
     source = 'EC'
     iodata = getData(source, -79.399, 43.663)
     result = analyze(source, iodata)
     print('[' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ']发送天气信息完成')
     return result
-
-def turingreply(msg,usr):
-    data = {'key': '1f87c3c9cf3b4867b412267f8c7c1d30',
-            'info': msg,
-            'loc': '',
-            'userid': usr}
-    r = requests.post(url='http://www.tuling123.com/openapi/api', data = data)
-    result = json.loads(r.text)
-    return result['text']
 
 def getdaymsg():
     global daily
@@ -149,10 +139,10 @@ def getdaymsg():
     return timenow+'每日一句：\n'+note+'\n'+chinese
 
 def getstationfile():
-    # f = open('/root/qxahz/stations.txt')  # 返回一个文件对象
-    f = open('stations.txt')
+    # f = open('/root/qxahz/stations.txt')
+    f = open('stations.txt')#读入站点文件
     tmp = ''
-    line = f.readline()  # 调用文件的 readline()方法
+    line = f.readline()
     while line:
         tmp = line
         tmp = tmp.replace('\n', '')
@@ -311,10 +301,10 @@ scheduler.start()    #这里的调度任务是独立的一个线程
 daily = ''
 
 #gettoken()
-daily = getdaymsg() #初始化每日一句
+daily = getdaymsg() #daily message
 scheduler = BackgroundScheduler()
-scheduler.add_job(getdaymsg, 'interval', seconds = 24 * 60 * 60)  # 间隔24小时执行一次
-scheduler.start()  # 这里的调度任务是独立的一个线程
+scheduler.add_job(getdaymsg, 'interval', seconds = 24 * 60 * 60)  # 24hr
+scheduler.start()
 
 @robot.handler
 def hello(msg):
@@ -354,15 +344,6 @@ def hello(msg):
                     "开发者Github主页 Developer Github",
                     "https://avatars0.githubusercontent.com/u/28524641?s=460&v=4",
                     "https://github.com/Louis-He"
-                ]
-            ]
-        elif msg.content[-2:len(msg.content)] == '墙纸':
-            return [
-                [
-                    "小白Iphone自制墙纸",
-                    "开发者专用墙纸@小白",
-                    "http://192.241.196.228:8080/static/iPhone8.png",
-                    "http://192.241.196.228:8080/static/iPhone8.png"
                 ]
             ]
         else:
