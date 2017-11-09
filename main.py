@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+
+from searchsession import *
 from weatherstation import *
+from apistatics import *
 import werobot
 import time
 import urllib
@@ -9,6 +12,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 global weatherstation
 
 weatherstation = []
+onlinesession = [] # list to store the information of chatting
 robot = werobot.WeRoBot(token='louishe999617')
 #client = robot.client
 
@@ -280,9 +284,13 @@ def getcnair(usrinput):
             return "抱歉，没有找到相关站点"
     return result
 
-
+'''
+#import and analyze the weather station infomation file
 getstationfile()
 
+#initialize statistic variables
+minbrowse = 0
+statistic = statics()
 '''
 def clearlog():
     #clear logs every hour
@@ -295,8 +303,6 @@ def clearlog():
 scheduler = BackgroundScheduler()
 scheduler.add_job(clearlog, 'interval', seconds = 3600 * 6)#间隔6小时执行一次
 scheduler.start()    #这里的调度任务是独立的一个线程
-'''
-
 
 daily = ''
 
@@ -330,14 +336,6 @@ def hello(msg):
         elif msg.content[-3:len(msg.content)] == 'aqi' or msg.content[-3:len(msg.content)] == 'AQI':
             return (getcnair(msg.content[0:-3]))
         elif msg.content[-3:len(msg.content)] == '开发者'  or msg.content[-2:len(msg.content)] == '关于':
-            '''
-                [
-                    "title",
-                    "description",
-                    "img",
-                    "url"
-                ],
-            '''
             return [
                 [
                     "开发者 Developer Louis-He",
@@ -347,17 +345,18 @@ def hello(msg):
                 ]
             ]
         else:
-            return ('欢迎关注中国气象爱好者～\n1.输入相关城市进行天气查询，例如："北京天气"，"上海天气"\n'
-                    '2.输入相关城市进行实况要素查询，例如："广州实况"，"乌鲁木齐实况"\n'
-                    '3.输入相关城市进行空气质量查询，例如："哈尔滨空气"，"厦门空气"\n' + daily)
+            getwebresource(msg.content)
     except:
         return ('欢迎关注中国气象爱好者～\n1.输入相关城市进行天气查询，例如："北京天气"，"上海天气"\n'
                     '2.输入相关城市进行实况要素查询，例如："广州实况"，"乌鲁木齐实况"\n'
                 '3.输入相关城市进行空气质量查询，例如："哈尔滨空气"，"厦门空气"\n' + daily)
 
-# 让服务器监听在 0.0.0.0:80
+
+# let the server listen at the port 0.0.0.0:80
 robot.config['HOST'] = '0.0.0.0'
 robot.config['PORT'] = 80
 robot.run()
 
-#print(getstationweather('漠河',50136, false))
+
+#debug section
+#getwebresource('上海')

@@ -1,6 +1,11 @@
+# -*- coding: utf-8 -*-
+
 import urllib
 import json
 import time as times
+import requests
+from socket import timeout
+
 
 class station:
     def __init__(self, innumber, inname, incity, inlat, inlon):
@@ -30,8 +35,11 @@ class station:
         print('[' + times.strftime("%Y-%m-%d %H:%M:%S", times.localtime()) + ']获取' + station + name + '天气信息')
 
         # http://www.nmc.cn/f/rest/real/58367
-        data = urllib.request.urlopen(
-            'http://www.nmc.cn/f/rest/real/' + str(station)).read()
+        try:
+            data = urllib.request.urlopen(
+            'http://www.nmc.cn/f/rest/real/' + str(station), timeout = 5).read()
+        except timeout:
+            return '抱歉，请求超时，请稍后重试。'
         record = data.decode('UTF-8')
         data = json.loads(record)
 
@@ -192,8 +200,11 @@ class station:
         print('[' + times.strftime("%Y-%m-%d %H:%M:%S", times.localtime()) + ']获取' + station + name + '空气质量信息')
 
         # http://www.nmc.cn/f/rest/real/58367
-        data = urllib.request.urlopen(
-            'http://www.nmc.cn/f/rest/aqi/' + str(station)).read()
+        try:
+            data = urllib.request.urlopen(
+            'http://www.nmc.cn/f/rest/aqi/' + str(station), timeout = 5).read()
+        except timeout:
+            return '抱歉，请求超时，请稍后重试。'
         record = data.decode('UTF-8')
         data = json.loads(record)
         forecasttime = data['forecasttime']
@@ -224,3 +235,11 @@ class station:
                self.updatestationair(name,station)
 
         return self.air + '\n空气质量数据于' + self.webairupdatetime + '更新，数据来源自国家气象中心'
+
+#function to return the webstation URL
+#http://toy1.weather.com.cn/search?cityname={input}&callback=success_jsonpCallback
+def getwebresource(input):
+    url = 'http://toy1.weather.com.cn/search?cityname=' + input
+    data = urllib.request.urlopen(url).read()
+    record = data.decode('UTF-8')
+    data = json.loads(record)
