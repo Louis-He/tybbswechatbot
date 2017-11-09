@@ -284,14 +284,14 @@ def getcnair(usrinput):
             return "抱歉，没有找到相关站点"
     return result
 
-'''
+
 #import and analyze the weather station infomation file
 getstationfile()
 
 #initialize statistic variables
 minbrowse = 0
 statistic = statics()
-'''
+
 def clearlog():
     #clear logs every hour
     f = open('/home/weather/hsefz_server/wxbot/record/txtrecord.txt', 'w')
