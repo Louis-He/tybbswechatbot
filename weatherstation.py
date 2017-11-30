@@ -68,8 +68,11 @@ class station:
             wd = []
             ws = []
             url = data['station']['url']
-            index = urllib.request.urlopen(
-                'http://www.nmc.cn/' + url).read()
+            try:
+                index = urllib.request.urlopen(
+                    'http://www.nmc.cn/' + url, timeout = 5).read()
+            except timeout:
+                return '抱歉，请求超时，请稍后重试。'
             indexhtmlfile = index.decode('UTF-8')
             indexhtmlfile = indexhtmlfile.replace(' ', '')  # 删除所有空格
             indexhtmlfile = indexhtmlfile[

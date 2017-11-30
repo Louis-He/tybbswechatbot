@@ -344,6 +344,8 @@ def hello(msg):
                     "https://github.com/Louis-He"
                 ]
             ]
+        elif msg.content[-2:len(msg.content)] == '管理':
+            return('服务器运行正常')
         else:
             getwebresource(msg.content)
     except:
