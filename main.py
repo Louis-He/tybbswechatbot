@@ -344,6 +344,15 @@ def hello(msg):
                     "https://github.com/Louis-He"
                 ]
             ]
+        elif msg.content[-4:len(msg.content)] == '污染地图'  or msg.content[-6:len(msg.content)] == '空气污染地图':
+            return [
+                [
+                    "中国地区污染地图",
+                    "中国地区污染地图",
+                    "http://138.68.4.232:8083/static/images/aqi.png",
+                    "http://138.68.4.232:8083/index"
+                ]
+            ]
         elif msg.content[-2:len(msg.content)] == '管理':
             return('服务器运行正常')
         else:
