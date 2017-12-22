@@ -337,6 +337,8 @@ def getfunc(userinput):
                 else:
                     result = result + str(count) + '. ' + file + '\n输入Tybbsget（图片编号）获取图片，例如：Tybbsgetpic1'
             count += 1
+        if result == '':
+            result = '没有找到完成的图形产品。'
         return result
 
     if userinput[0:3] == 'pic':
@@ -361,8 +363,6 @@ def getfunc(userinput):
             return "无相应编号产品"
         except:
             return "获取图形产品失败，请检查"
-
-
 
 #import and analyze the weather station infomation file
 getstationfile()
