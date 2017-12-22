@@ -432,7 +432,7 @@ def hello(msg):
             ]
         elif msg.content[-2:len(msg.content)] == '管理':
             return('服务器运行正常')
-        elif msg.content[-2:len(msg.content)] == '绘图':
+        elif msg.content[0:2] == '绘图':
             return('输入语法：Tybbsplot,(机构),(类型),(经度),(纬度)，例如：Tybbsplot,EC,G,121.25,31.45')
         elif msg.content[0:9] == 'Tybbsplot':
             return addplotmission(msg.content[10:len(msg.content)])
