@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from searchsession import *
 from weatherstation import *
 from apistatics import *
@@ -284,6 +285,82 @@ def getcnair(usrinput):
             return "抱歉，没有找到相关站点"
     return result
 
+def addplotmission(userinput):
+    i = userinput.replace('，',',')
+    i = i.replace('。', '.')
+    i = i.replace('e', 'E')
+    i = i.replace('c', 'C')
+    i = i.replace('g', 'G')
+    i = i.replace('f', 'F')
+    i = i.replace('s', 'S')
+    i = i.replace('v', 'V')
+
+    try:
+        source = i[0:i.find(',')]
+        i = i[i.find(',')+1:len(i)]
+        plottype = i[0:i.find(',')]
+        i = i[i.find(',') + 1:len(i)]
+        lon = i[0:i.find(',')]
+        i = i[i.find(',') + 1:len(i)]
+        lat = i[0:len(i)]
+
+        if plottype == 'G':
+            plottype = 'ground'
+        elif plottype == 'V':
+            plottype = 'vertical'
+        '''
+        print('!![LON]!!' + lon)
+        print('!![LAT]!!' + lat)
+        print('!![SOURCE]!!' + source)
+        print('!![PLOT_TYPE]!!' + plottype)
+        '''
+        f = open('/root/station_forecast/website/waitlistmission.sh', 'a+')
+        f.write('python3 main.py --lon ' + lon + ' --lat ' + lat + ' --source ' + source + ' --type ' + plottype + '\n')
+        f.close()
+        return '[操作成功]任务添加成功，输入"Tybbsget列表"查看任务进程。'
+    except:
+        return '[操作失败]任务添加失败，请检查输入语法或联系管理员。'
+
+def getfunc(userinput):
+    userinput = userinput.replace('Pic','pic')
+    if userinput[0:2] == '列表':
+        path = '/root/station_forecast/website/static/images/'
+        files = os.listdir(path)
+        #finallist = []
+        result = ''
+        count = 1
+        for file in files:
+            if file[-3:] == 'png':
+                #finallist.append(file)
+                if count < len(files):
+                    result = result + str(count) + '. ' + file + '\n'
+                else:
+                    result = result + str(count) + '. ' + file + '\n输入Tybbsget（图片编号）获取图片，例如：Tybbsgetpic1'
+            count += 1
+        return result
+
+    if userinput[0:3] == 'pic':
+        picnum = userinput[3:len(userinput)]
+        path = '/root/station_forecast/website/static/images/'
+        files = os.listdir(path)
+        # finallist = []
+        result = ''
+        count = 1
+        try:
+            for file in files:
+                if file[-3:] == 'png' and count == int(picnum):
+                    return [
+                        [
+                            "图形产品返回结果",
+                            "图形产品，编号："+picnum+"，产品名："+file,
+                            "http://138.68.4.232:8084/static/images/" + file,
+                            "http://138.68.4.232:8084/static/images/" + file
+                        ]
+                    ]
+        except:
+            return "获取图形产品失败，请检查"
+
+
 
 #import and analyze the weather station infomation file
 getstationfile()
@@ -355,6 +432,12 @@ def hello(msg):
             ]
         elif msg.content[-2:len(msg.content)] == '管理':
             return('服务器运行正常')
+        elif msg.content[-2:len(msg.content)] == '绘图':
+            return('输入语法：Tybbsplot,(机构),(类型),(经度),(纬度)，例如：Tybbsplot,EC,G,121.25,31.45')
+        elif msg.content[0:9] == 'Tybbsplot':
+            return addplotmission(msg.content[10:len(msg.content)])
+        elif msg.content[0:8] == 'Tybbsget':
+            return getfunc(msg.content[8:len(msg.content)])
         else:
             getwebresource(msg.content)
     except:
