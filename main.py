@@ -357,6 +357,8 @@ def getfunc(userinput):
                             "http://138.68.4.232:8084/static/images/" + file
                         ]
                     ]
+                count += 1
+            return "无相应编号产品"
         except:
             return "获取图形产品失败，请检查"
 
