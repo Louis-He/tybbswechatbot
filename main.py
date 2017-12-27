@@ -373,7 +373,7 @@ statistic = statics()
 
 def clearlog():
     #clear logs every hour
-    f = open('/home/weather/hsefz_server/wxbot/record/txtrecord.txt', 'w')
+    f = open('/root/qxahz/message.txt', 'w')
     f.write('[' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ']record重新写入')
     f.close()  # you can omit in most cases as the destructor will call it
     print('[' + time.strftime("%Y-%m-%d %H:%M:%S",
