@@ -13,7 +13,7 @@ itchat==1.2.32
 Markdown==2.6.9
 matplotlib==2.0.2
 mpmath==1.0.0
-numpy==1.13.1
+numpy==1.22.0
 requests==2.18.4
 urllib3==1.22
 WeRoBot==1.1.1
